@@ -4,8 +4,8 @@ import { number } from "prop-types";
 import { random, inRange } from "lodash";
 
 class Dart {
-    x: number;
-    y: number;
+   private x: number;
+   private y: number;
 
     constructor() {
         this.x = random(40, 360);
@@ -48,7 +48,9 @@ class Dart {
         return dartArcAngle;
     }
 
+    // Calculates the length of the point from the origin
     calculateLineDistance() {
+        
         // Line distance is the distance between the dart and the center of the dartboard
         const lineDistance: number = Math.sqrt(Math.pow((200 - this.x), 2) + Math.pow((200 - this.y), 2));
         return lineDistance;

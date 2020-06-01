@@ -4,8 +4,8 @@ import ReactDOM from "react-dom";
 import { Button } from 'react-bootstrap';
 import { random, inRange } from "lodash";
 import { loadavg } from 'os';
-import DesignDartBoard from "./dartBoard"
-import { handleDarts } from "./dartBoard"
+import handleDarts from "./dartHandler"
+import DartBoard from "./dartBoard";
 import { get } from "lodash/fp"
 import Dart from "./Dart"
 
@@ -73,15 +73,18 @@ const App = () => {
 
     {/* useEffect - the function that is input is performed after the components mount.
                     In other words, after everything loads, useEffect runs */}
+
+    const dartBoard: DartBoard = new DartBoard();
     
     // Builds the dart board
-    useEffect(DesignDartBoard, [])
+    useEffect(dartBoard.designDartBoard, [])
 
     const disableButton = (buttonId: string) => {
         const buttonToDisable = document.getElementById(buttonId);
         if (!buttonToDisable) {
             return;
         }
+
         // Casting the button as an HTML Button Element
         (buttonToDisable as HTMLButtonElement).disabled = true;
     }
@@ -97,7 +100,7 @@ const App = () => {
         if (!id) {
             return;
         }
-        handleDarts("throw");
+        handleDarts(dartBoard, "throw");
         disableButton(id);
     }, [])
 
@@ -108,7 +111,7 @@ const App = () => {
         if (!id) {
             return;
         }
-        handleDarts("remove");
+        handleDarts(dartBoard, "remove");
     }, [])
 
 
@@ -117,7 +120,7 @@ const App = () => {
         <h1>Darts Guessing Game</h1>
         <p>
             500 darts will be thrown at the dart board below. Guess
-            which section of the dart board will receive the most amount of darts.
+            which section of the dart board received the most amount of darts.
             If you pick the area with the most darts, you win!
         </p>
         <div>
@@ -144,6 +147,7 @@ const App = () => {
         {/* Empty div to separate the dartboard and the buttons */}
         <div />
 
+        {/* Throw Darts and Reset Buttons */}
         <div style={{ width: "350px", left: "25px", display: "inline-flex", position: "relative" }}>
             {/* This button will call ThrowDarts */}
             <button onClick={handleDartButtonClick} id="dartButton" type="button" className="btn btn-danger">
