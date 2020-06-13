@@ -3,6 +3,9 @@ import DartBoard from "./../dartBoard"
 import { action } from "./actions";
 
 // The dart board used for the state
+
+// TODO - See if it's possible to initialize dartBoard in App.tsx without
+// and allowing state to continue
 const dartBoard: DartBoard = new DartBoard();
 
 // ****** REDUX MANAGEMENET ******
