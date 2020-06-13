@@ -1,83 +1,28 @@
 import React, { Component, useEffect, useCallback } from "react";
-import Redux from "redux";
 import ReactDOM from "react-dom";
 import { Button } from 'react-bootstrap';
 import { random, inRange } from "lodash";
 import { loadavg } from 'os';
-import handleDarts from "./dartHandler"
+import { createStore, combineReducers} from "redux";
+import {action, CLEAR_BOARD, THROW_DARTS, clearBoard, throwDarts} from "./redux/actions";
+import dartBoardReducer from "./redux/reducers"
+import handleDarts from "./dartHandler";
+import { dartBoard } from "./redux/reducers";
 import DartBoard from "./dartBoard";
-import { get } from "lodash/fp"
-import Dart from "./Dart"
+import { get } from "lodash/fp";
+import Dart from "./Dart";
 
 const App = () => {
 
-    interface boardState {
-        emptyBoard: boolean,
-        darts: Dart[]
-    }
 
-    interface actionType {
-        type: string,
-        text: string,
-    }
+    /* useEffect - the function that is input is performed after the components mount.
+    In other words, after everything loads, useEffect runs */
 
-    // Redux action types -- May have to move into separate file in the future --
-    const CLEAR_BOARD: string = "CLEAR_BOARD";
-    const THROW_DARTS: string = "THROW_DARTS";
+    const store = createStore(dartBoardReducer);
 
-    // Action objects
-    const clearBoard: actionType = {
-        type: CLEAR_BOARD,
-        text: "Clears the board of darts and recreates the dart board"
-    }
-    const throwDarts: actionType = {
-        type: THROW_DARTS,
-        text: "Throws darts onto the board and places them on the cavas"
-    }
-
-    // State variables
-    let isEmpty: boolean = true;
-    let theDarts: Dart[] = [];
-
-    const initialState: boardState = {
-        emptyBoard: isEmpty,
-        darts: theDarts
-    }
-
-    // Reducer
-    const changeDartBoard = (state: boardState, action: actionType) => {
-        
-        if (typeof state === "undefined") {
-            return initialState;
-        }
-
-        switch(action.type) {
-            case CLEAR_BOARD:
-                // Each case returns a new state object with
-                // updated properties
-                return Object.assign({}, state, {
-                    // Changes state of dart board
-                    emptyBoard: true
-                })
-            case THROW_DARTS:
-                return Object.assign({}, state, {
-                    // Changes state of the dart board
-                })
-
-            default:
-                return state;
-
-        }
-        
-    }
-
-    {/* useEffect - the function that is input is performed after the components mount.
-                    In other words, after everything loads, useEffect runs */}
-
-    const dartBoard: DartBoard = new DartBoard();
-    
-    // Builds the dart board
+    // Functions needed after DOM is loaded
     useEffect(dartBoard.designDartBoard, [])
+    useEffect( () => {disableButton("resetButton")}, []);
 
     const disableButton = (buttonId: string) => {
         const buttonToDisable = document.getElementById(buttonId);
@@ -89,31 +34,53 @@ const App = () => {
         (buttonToDisable as HTMLButtonElement).disabled = true;
     }
 
+    const enableButton = (buttonId: string) => {
+        const buttonToDisable = document.getElementById(buttonId);
+        if (!buttonToDisable) {
+            return;
+        }
+    
+        (buttonToDisable as HTMLButtonElement).disabled = false;
+    }
+
     /* Memoized - caches the result of the function and returns it when the same input returns again.
        useCallback returns a memoized callback that only changes if one of the dependencies (in the brackets)
        changes.
-       */
-    const handleDartButtonClick = useCallback((el) => {
+    */
+    const handleDartButtonClick = useCallback(async (el) => {
 
         // This obtains the ID of the button element
         const id = get('target.id', el);
         if (!id) {
             return;
         }
-        handleDarts(dartBoard, "throw");
-        disableButton(id);
+        
+        await handleDarts(dartBoard, "throw");
+        store.dispatch(throwDarts);
+        if (!store.getState().emptyBoard) {
+            disableButton(id);
+            enableButton("resetButton");
+        }
+
     }, [])
 
-    const handleResetButton = useCallback((el) => {
+    const handleResetButton = useCallback(async (el) => {
 
         // This obtains the ID of the button element
         const id = get('target.id', el);
         if (!id) {
             return;
         }
-        handleDarts(dartBoard, "remove");
-    }, [])
 
+        // Waits for the darts to finish before updating the state
+        await handleDarts(dartBoard, "remove");
+        store.dispatch(clearBoard);
+        if (store.getState().emptyBoard) {
+            enableButton("dartButton");
+            disableButton("resetButton");
+        }
+
+    }, [])
 
     return <div>
         {/* TODO - Eventually Redesign to make this title look better */}
@@ -153,13 +120,12 @@ const App = () => {
             <button onClick={handleDartButtonClick} id="dartButton" type="button" className="btn btn-danger">
                 Throw Darts
             </button>
-
-            <span style={{
-                flex: "auto",
-            }} />
+            
+            {/* Separates the two buttons */}
+            <span style={{flex: "auto"}} />
 
             {/* This button will reset the dart board */}
-            <button onClick={handleResetButton} id="handleResetButton" type="button" className="btn btn-danger">
+            <button onClick={handleResetButton} id="resetButton" type="button" className="btn btn-danger">
                 Reset
             </button>
         </div>
@@ -169,3 +135,4 @@ const App = () => {
 };
 
 export default App;
+export {dartBoard as dartBoard};

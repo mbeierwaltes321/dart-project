@@ -8,6 +8,7 @@ class DartBoard {
     private sectionFour: number;
     private sectionFive: number;
     private sectionSix: number;
+    private allDarts: Dart[];
 
     constructor() {
         this.sectionOne = 0;
@@ -16,6 +17,11 @@ class DartBoard {
         this.sectionFour = 0;
         this.sectionFive = 0;
         this.sectionSix = 0;
+        this.allDarts = [];
+    }
+
+    get getDarts() {
+        return this.allDarts;
     }
 
     // Draws the dartboard on the UI
@@ -65,32 +71,33 @@ class DartBoard {
     }
 
     // Returns the number of darts in the respective section
-    public dartsInSection(section: number) {
+    public getDartsInSection(section: number) {
 
-      switch (section) {
-        case 1:
-            return this.sectionOne;
-        case 2:
-            return this.sectionTwo;
-        case 3:
-            return this.sectionThree;
-        case 4:
-            return this.sectionFour;
-        case 5:
-            return this.sectionFive;
-        case 6:
-            return this.sectionSix;
-        default:
-            return 0;
-      }
-
-
+        switch (section) {
+            case 1:
+                return this.sectionOne;
+            case 2:
+                return this.sectionTwo;
+            case 3:
+                return this.sectionThree;
+            case 4:
+                return this.sectionFour;
+            case 5:
+                return this.sectionFive;
+            case 6:
+                return this.sectionSix;
+            default:
+                return 0;
+        }
     }
 
     // Calculates location of dart and increments respective section
-    public countDart(dart: Dart) {
+    public receiveDart(dart: Dart, index: number) {
 
-        // Calculates 
+        // Inserts the correct dart into the dart array
+        this.allDarts[index] = dart;
+
+        // Calculates necessary information for figuring out the dart section
         const lineDistance = dart.calculateLineDistance();
         const arcAngle = dart.calculateArcAngle();
 
@@ -107,6 +114,14 @@ class DartBoard {
         } else if (lineDistance <= 160 && inRange(arcAngle, 301, 359)) {
             this.sectionSix++;
         }
+    }
+
+    public clearDarts() {
+        this.allDarts = [];
+    }
+
+    public isEmpty() {
+        return this.allDarts.length == 0;
     }
 }
 
