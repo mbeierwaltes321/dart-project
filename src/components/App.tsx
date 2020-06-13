@@ -3,14 +3,11 @@ import ReactDOM from "react-dom";
 import { Button } from 'react-bootstrap';
 import { random, inRange } from "lodash";
 import { loadavg } from 'os';
-import { createStore, combineReducers} from "redux";
-import {action, CLEAR_BOARD, THROW_DARTS, clearBoard, throwDarts} from "./redux/actions";
+import { createStore, combineReducers } from "redux";
+import { action, CLEAR_BOARD, THROW_DARTS, clearBoard, throwDarts } from "./redux/actions";
 import dartBoardReducer from "./redux/reducers"
 import handleDarts from "./dartHandler";
-import { dartBoard } from "./redux/reducers";
-import DartBoard from "./dartBoard";
 import { get } from "lodash/fp";
-import Dart from "./Dart";
 
 const App = () => {
 
@@ -20,9 +17,9 @@ const App = () => {
 
     const store = createStore(dartBoardReducer);
 
-    // Functions needed after DOM is loaded
-    useEffect(dartBoard.designDartBoard, [])
-    useEffect( () => {disableButton("resetButton")}, []);
+    // Functions needed after DOM is loaded - designs the board and disables the Reset button intially
+    useEffect(store.getState().board.designDartBoard, [])
+    useEffect(() => { disableButton("resetButton") }, []);
 
     const disableButton = (buttonId: string) => {
         const buttonToDisable = document.getElementById(buttonId);
@@ -39,7 +36,7 @@ const App = () => {
         if (!buttonToDisable) {
             return;
         }
-    
+
         (buttonToDisable as HTMLButtonElement).disabled = false;
     }
 
@@ -54,8 +51,8 @@ const App = () => {
         if (!id) {
             return;
         }
-        
-        await handleDarts(dartBoard, "throw");
+
+        await handleDarts(store.getState().board, "throw");
         store.dispatch(throwDarts);
         if (!store.getState().emptyBoard) {
             disableButton(id);
@@ -73,7 +70,7 @@ const App = () => {
         }
 
         // Waits for the darts to finish before updating the state
-        await handleDarts(dartBoard, "remove");
+        await handleDarts(store.getState().board, "remove");
         store.dispatch(clearBoard);
         if (store.getState().emptyBoard) {
             enableButton("dartButton");
@@ -90,29 +87,44 @@ const App = () => {
             which section of the dart board received the most amount of darts.
             If you pick the area with the most darts, you win!
         </p>
-        <div>
-            <canvas id="dartBoardOutline" width="400px" height="400px"
-                style={{
-                    position: "absolute",
-                    border: "3px solid rgb(201, 0, 0)",
-                    marginTop: "20px",
-                    marginBottom: "20px",
-                    transform: "scale(0.9)"
-                }} />
-            <canvas id="darts" width="400px" height="400px"
-                style = {{
-                    position: "relative",
-                    border: "3px solid rgb(201, 0, 0)",
-                    marginTop: "20px",
-                    marginBottom: "20px",
-                    transform: "scale(0.9)"
-                }}>
+        <div style={{ overflowX: "auto", whiteSpace: "nowrap" }}>
 
-            </canvas>
+            {/* Canvas container for the dartboard and its darts */}
+            <div style={{ position:"relative", display: "inline-block" }}>
+                <canvas id="dartBoardOutline" width="400px" height="400px"
+                    style={{
+                        position: "absolute",
+                        border: "3px solid rgb(201, 0, 0)",
+                        marginTop: "20px",
+                        marginBottom: "20px",
+                        transform: "scale(0.9)"
+                    }}>
+                </canvas>
+                <canvas id="darts" width="400px" height="400px"
+                    style={{
+                        position: "relative",
+                        border: "3px solid rgb(201, 0, 0)",
+                        marginTop: "20px",
+                        marginBottom: "20px",
+                        transform: "scale(0.9)"
+                    }}>
+                </canvas>
+            </div>
+
+            <div id="spaceForGuess"
+                style={{
+                    display: "inline-block",
+                    marginTop: "40px",
+                    position: "absolute",
+                    width: "300px",
+                    height: "200px",
+                    background: "blue"
+                }}>
+            </div>
+
         </div>
 
         {/* Empty div to separate the dartboard and the buttons */}
-        <div />
 
         {/* Throw Darts and Reset Buttons */}
         <div style={{ width: "350px", left: "25px", display: "inline-flex", position: "relative" }}>
@@ -120,9 +132,9 @@ const App = () => {
             <button onClick={handleDartButtonClick} id="dartButton" type="button" className="btn btn-danger">
                 Throw Darts
             </button>
-            
+
             {/* Separates the two buttons */}
-            <span style={{flex: "auto"}} />
+            <span style={{ flex: "auto" }} />
 
             {/* This button will reset the dart board */}
             <button onClick={handleResetButton} id="resetButton" type="button" className="btn btn-danger">
@@ -135,4 +147,3 @@ const App = () => {
 };
 
 export default App;
-export {dartBoard as dartBoard};
