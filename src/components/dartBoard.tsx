@@ -118,6 +118,7 @@ class DartBoard {
 
     public clearDarts() {
         this.allDarts = [];
+        this.sectionOne = this.sectionTwo = this.sectionThree = this.sectionFour = this.sectionFive = this.sectionSix = 0;
     }
 
     public isEmpty() {

@@ -1,16 +1,14 @@
-import React, { Component, useEffect, useCallback } from "react";
-import ReactDOM from "react-dom";
-import { Button } from 'react-bootstrap';
-import { random, inRange } from "lodash";
-import { loadavg } from 'os';
-import { createStore, combineReducers } from "redux";
-import { action, CLEAR_BOARD, THROW_DARTS, clearBoard, throwDarts } from "./redux/actions";
-import dartBoardReducer from "./redux/reducers"
+import React, { Component, useEffect, useCallback, ReactComponentElement } from "react";
+import { clearBoard, throwDarts } from "./redux/actions";
+import DartBoard from "./dartBoard";
+import { createStore } from "redux";
+import dartBoardReducer from "./redux/reducers";
+import { stateType } from "./redux/reducers";
+import GuessBox from "./guessDartBox";
 import handleDarts from "./dartHandler";
 import { get } from "lodash/fp";
 
 const App = () => {
-
 
     /* useEffect - the function that is input is performed after the components mount.
     In other words, after everything loads, useEffect runs */
@@ -111,16 +109,7 @@ const App = () => {
                 </canvas>
             </div>
 
-            <div id="spaceForGuess"
-                style={{
-                    display: "inline-block",
-                    marginTop: "40px",
-                    position: "absolute",
-                    width: "300px",
-                    height: "200px",
-                    background: "blue"
-                }}>
-            </div>
+        <GuessBox emptyBoard={store.getState().emptyBoard} board={store.getState().board}/>
 
         </div>
 

@@ -32,3 +32,4 @@ const dartBoardReducer = (state: boardState = initialState, action: action) => {
 }
 
 export default dartBoardReducer;
+export { boardState as stateType};

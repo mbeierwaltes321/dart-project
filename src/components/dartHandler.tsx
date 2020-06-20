@@ -5,13 +5,6 @@ import DartBoard from "./dartBoard"
 import Dart from "./Dart";
 import Bluebird from 'bluebird';
 
-// Making these darts into a state.
-    // When you click "Throw Darts"
-    // 1: Calculate the position all darts. Store this information in allDarts array
-    // 2: Iterate through the allDarts array. Draw dart on canvas
-    // When you click "Reset"
-    // 3: Set allDarts to []
-
 // Deals with the darts being thrown at the dartboard
 const handleDarts = async (dartBoard: DartBoard, act?: string) => {
 
