@@ -2,5 +2,5 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
 
-//TODO - Figure out a way to put store up in root
+//TODO - Rewrite project to work with React-Redux
 ReactDOM.render(<App />, document.getElementById("app"));
