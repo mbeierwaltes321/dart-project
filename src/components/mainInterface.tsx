@@ -3,6 +3,7 @@ import { clearBoard, throwDarts } from "./redux/actions";
 import GuessBox from "./guessDartBox";
 import handleDarts from "./dartHandler";
 import { get } from "lodash/fp";
+import ResultBox from './resultBox';
 
 const MainInterface: FunctionComponent<{store: any}> = (props) => {
 
@@ -15,7 +16,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
 
     // Reveals or hides the guessbox depending on if darts were thrown
     const handleGuessBox = useCallback((reveal: boolean) => {
-        const guessBox = document.getElementById("guessBoardDivider");
+        const guessBox = document.getElementById("guessBoard");
         if (!guessBox) {
             return;
         }
@@ -86,13 +87,15 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
 
     return <div>
         {/* TODO - Eventually Redesign to make this title look better */}
-        <h1>Darts Guessing Game</h1>
-        <p>
-            500 darts will be thrown at the dart board below. Guess
-            which section of the dart board received the most amount of darts.
-            If you pick the area with the most darts, you win!
-        </p>
-        <div style={{ overflowX: "auto", whiteSpace: "nowrap" }}>
+        <h1 style={{marginLeft: "18px"}}>Darts Guessing Game</h1>
+        <div style={{marginLeft: "20px"}}>
+            <p>
+                500 darts will be thrown at the dart board below. Guess
+                which section of the dart board received the most amount of darts.
+                If you pick the area with the most darts, you win!
+            </p>
+        </div>
+        <div style={{ overflowX: "visible", whiteSpace: "nowrap" }}>
 
             {/* Canvas container for the dartboard and its darts */}
             <div style={{ position:"relative", display: "inline-block" }}>
@@ -115,8 +118,13 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
                     }}>
                 </canvas>
             </div>
-            <div id="guessBoardDivider" style={{position: "absolute", display: "inline-block"}} hidden={true}>
-                <GuessBox emptyBoard={props.store.getState().emptyBoard} board={props.store.getState().board}/>
+            <div id="resultElements" style={{width:"300px", position: "absolute", display: "inline-block"}}>
+                <div id="guessBoard" style={{position: "static"}} /* hidden={true} */>
+                    <GuessBox emptyBoard={props.store.getState().emptyBoard} board={props.store.getState().board}/>
+                </div>
+                <div id="resultBox" style={{position: "static"}} >
+                    <ResultBox emptyBoard={props.store.getState().emptyBoard} board={props.store.getState().board}></ResultBox>
+                </div>
             </div>
         </div>
 

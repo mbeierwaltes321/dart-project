@@ -3,7 +3,7 @@ import { get } from "lodash/fp";
 import max from "lodash/max";
 import { stateType } from "./redux/reducers";
 
-const GuessBox: React.FunctionComponent< stateType > = (props) => {
+const GuessBox: React.FunctionComponent<stateType> = (props) => {
 
     const checkIfGreatest = (guess: number) => {
         
@@ -70,7 +70,7 @@ const GuessBox: React.FunctionComponent< stateType > = (props) => {
         style={{
             border: "5px solid black",
             marginTop: "40px",
-            position: "absolute",
+            position: "static",
             width: "300px",
             height: "200px",
             background: "purple"
@@ -81,13 +81,12 @@ const GuessBox: React.FunctionComponent< stateType > = (props) => {
                 width: "290px",
                 height: "40px",
                 paddingTop: "10px",
-                paddingLeft: "120px",
-                paddingRight: "120px",
+                paddingLeft: "75px",
             }}>
-
-                <h3 id="voteSign" style={{color: "yellow"}}>
-                    Vote
-                </h3>
+            
+            <h3 id="voteSign" style={{color: "yellow"}}>
+                Pick Section
+            </h3>
 
         </div>
 
@@ -128,7 +127,6 @@ const GuessBox: React.FunctionComponent< stateType > = (props) => {
             <button onClick={guessSection} style={{ width: "90px", height: "50px" }} id="sectionSixButton" type="button" className="btn btn-dark"> Section 6 </button>
 
         </div>
-
 
     </div>
 
