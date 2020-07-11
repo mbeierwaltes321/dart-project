@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useCallback, useState } from "react";
 import { get } from "lodash/fp";
 import max from "lodash/max";
-import { correctChoice, incorrectChoice } from "./redux/actions";
+import { correctChoice, incorrectChoice } from "../Redux_Management/actions";
 
 // When React-Redux is added, the props will be changed
 // Contains two components: the Guess Box and the result box.

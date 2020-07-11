@@ -1,4 +1,4 @@
-import DartBoard from "./../dartBoard"
+import DartBoard from "../data_strucs/dartBoard";
 import { action, clearBoard, correctChoice, incorrectChoice } from "./actions";
 
 // The dart board used for the state

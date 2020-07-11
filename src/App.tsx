@@ -1,7 +1,7 @@
 import React from "react";
-import MainInterface from "./mainInterface";
+import MainInterface from "./components/mainInterface";
 import { createStore } from "redux";
-import dartBoardReducer from "./redux/reducers"
+import dartBoardReducer from "./Redux_Management/reducers"
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // composeWithDevTools is used for the redux Chrome extension

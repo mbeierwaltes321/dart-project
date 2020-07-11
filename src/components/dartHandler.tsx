@@ -1,5 +1,5 @@
-import DartBoard from "./dartBoard"
-import Dart from "./Dart";
+import DartBoard from "../data_strucs/dartBoard"
+import Dart from "../data_strucs/Dart";
 import Bluebird from 'bluebird';
 
 // Deals with the darts being thrown at the dartboard

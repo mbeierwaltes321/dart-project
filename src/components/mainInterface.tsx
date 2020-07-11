@@ -1,9 +1,8 @@
-import React, { Component, useEffect, useCallback, ReactComponentElement, FunctionComponent } from "react";
-import { clearBoard, throwDarts } from "./redux/actions";
+import React, { useEffect, useCallback, FunctionComponent } from "react";
+import { clearBoard, throwDarts } from "../Redux_Management/actions";
 import DecisionBoxes from "./decisionBoxes";
 import handleDarts from "./dartHandler";
 import { get } from "lodash/fp";
-import { result } from 'lodash';
 
 const MainInterface: FunctionComponent<{store: any}> = (props) => {
 
@@ -77,7 +76,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
         await handleDarts(props.store.getState().board, "throw");
         props.store.dispatch(throwDarts);
         if (!props.store.getState().emptyBoard) {
-            hideDecisionBox("guessBox", false);
+           hideDecisionBox("guessBox", false);
             disableButton(id);
             enableButton("resetButton");
         }
