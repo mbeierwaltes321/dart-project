@@ -1,19 +1,22 @@
-import Dart from "./../Dart";
 import DartBoard from "./../dartBoard"
-import { action } from "./actions";
+import { action, clearBoard, correctChoice, incorrectChoice } from "./actions";
 
 // The dart board used for the state
 const dartBoard: DartBoard = new DartBoard();
 
-// ****** REDUX MANAGEMENET ******
+// ****** REDUX REDUCER MANAGEMENET ******
 interface boardState {
     emptyBoard: boolean,
-    board: DartBoard
+    board: DartBoard,
+    userIsCorrect: boolean,
+    userHasGuessed: boolean
 }
 
 const initialState: boardState = {
     emptyBoard: true,
-    board: dartBoard
+    board: dartBoard,
+    userIsCorrect: false,
+    userHasGuessed: false
 }
 
 const checkDarts = (state: boardState, action: action) => {
@@ -24,10 +27,40 @@ const returnUpdatedBoard = (state: boardState, action: action) => {
     return state.board
 }
 
+const updateCorrect = (state: boardState, action: action) => {
+    switch (action) {
+        case correctChoice:
+            return true;
+        case incorrectChoice:
+            return false;
+        case clearBoard:
+            return false;
+        default:
+            return state.userIsCorrect;
+    }
+}
+
+const updateGuessed = (state: boardState, action: action) => {
+    switch (action) {
+        case correctChoice:
+            return true;
+        case incorrectChoice:
+            return true;
+        case clearBoard:
+            return false;
+        default:
+            return state.userIsCorrect;
+        
+    }
+
+}
+
 const dartBoardReducer = (state: boardState = initialState, action: action) => {
     return {
         emptyBoard: checkDarts(state, action),
-        board: returnUpdatedBoard(state, action)
+        board: returnUpdatedBoard(state, action),
+        userIsCorrect: updateCorrect(state, action),
+        userHasGuessed: updateGuessed(state, action)
     }
 }
 
