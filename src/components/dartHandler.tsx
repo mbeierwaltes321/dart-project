@@ -8,6 +8,7 @@ const handleDarts = async (dartBoard: DartBoard, act?: string) => {
     // Sets up canvas for the dart dots
     const canvas = document.getElementById("darts");
     const dartDots = (canvas as HTMLCanvasElement).getContext("2d");
+    
     if (canvas === null) {
         return;
     }

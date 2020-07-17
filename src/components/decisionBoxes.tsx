@@ -38,39 +38,39 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
         (result_box as HTMLDivElement).hidden = false;
 
         switch (id) {
-        case "sectionOneButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(1));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        case "sectionTwoButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(2));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        case "sectionThreeButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(3));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        case "sectionFourButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(4));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        case "sectionFiveButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(5));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        case "sectionSixButton":
-            rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(6));
-            rightChoice == true ? props.store.dispatch(correctChoice) : props.store.dispatch(incorrectChoice);
-            pickResultMessage();
-            return rightChoice;
-        default:
-            props.store.dispatch(incorrectChoice);
-            return false;
+            case "sectionOneButton":
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(1));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            case "sectionTwoButton":
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(2));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            case "sectionThreeButton": 
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(3));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            case "sectionFourButton":
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(4));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            case "sectionFiveButton":
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(5));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            case "sectionSixButton":
+                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(6));
+                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                pickResultMessage();
+                return rightChoice;
+            default:
+                props.store.dispatch(incorrectChoice());
+                return false;
         };
 
     
@@ -80,8 +80,6 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
     // guessed right or not
     // Odd error where the padding wouldn't change when testing out the functionality
     const pickResultMessage = () => {
-
-        const topLayer = document.getElementById("message");
 
         if (props.store.getState().emptyBoard) {
             changeResultMessage("Still empty");

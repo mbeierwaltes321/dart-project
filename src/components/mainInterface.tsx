@@ -74,7 +74,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
         }
 
         await handleDarts(props.store.getState().board, "throw");
-        props.store.dispatch(throwDarts);
+        props.store.dispatch(throwDarts());
         if (!props.store.getState().emptyBoard) {
            hideDecisionBox("guessBox", false);
             disableButton(id);
@@ -93,7 +93,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
 
         // Waits for the darts to finish before updating the state
         await handleDarts(props.store.getState().board, "remove");
-        props.store.dispatch(clearBoard);
+        props.store.dispatch(clearBoard());
         if (props.store.getState().emptyBoard) {
             hideDecisionBox("both", true);
             enableButton("dartButton");

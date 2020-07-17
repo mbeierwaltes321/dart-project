@@ -1,5 +1,5 @@
 import DartBoard from "../data_strucs/dartBoard";
-import { action, clearBoard, correctChoice, incorrectChoice } from "./actions";
+import { action, CLEAR_BOARD, CORRECT_CHOICE, INCORRECT_CHOICE } from "./actions";
 
 // The dart board used for the state
 const dartBoard: DartBoard = new DartBoard();
@@ -28,12 +28,12 @@ const returnUpdatedBoard = (state: boardState, action: action) => {
 }
 
 const updateCorrect = (state: boardState, action: action) => {
-    switch (action) {
-        case correctChoice:
+    switch (action.type) {
+        case CORRECT_CHOICE:
             return true;
-        case incorrectChoice:
+        case INCORRECT_CHOICE:
             return false;
-        case clearBoard:
+        case CLEAR_BOARD:
             return false;
         default:
             return state.userIsCorrect;
@@ -41,12 +41,12 @@ const updateCorrect = (state: boardState, action: action) => {
 }
 
 const updateGuessed = (state: boardState, action: action) => {
-    switch (action) {
-        case correctChoice:
+    switch (action.type) {
+        case CORRECT_CHOICE:
             return true;
-        case incorrectChoice:
+        case INCORRECT_CHOICE:
             return true;
-        case clearBoard:
+        case CLEAR_BOARD:
             return false;
         default:
             return state.userIsCorrect;
