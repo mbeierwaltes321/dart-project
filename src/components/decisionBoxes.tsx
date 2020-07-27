@@ -1,12 +1,27 @@
 import React, { FunctionComponent, useCallback, useState } from "react";
 import { get } from "lodash/fp";
 import max from "lodash/max";
-import { correctChoice, incorrectChoice } from "../Redux_Management/actions";
+import { clearBoard, throwDarts, correctChoice, incorrectChoice } from "../Redux_Management/actions";
+import { stateType } from "../Redux_Management/reducers";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
+import DartBoard from '../data_strucs/dartBoard';
+
 
 // When React-Redux is added, the props will be changed
 // Contains two components: the Guess Box and the result box.
 // The result box component is built within the 
-const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
+const DecisionBoxes: FunctionComponent<{ board: DartBoard}> = (props) => {
+
+    // const board: any = useSelector( (state: stateType) => {state.board});
+    // const emptyBoard: any = useSelector( (state: stateType) => {state.emptyBoard});
+    // const userIsCorrect: any = useSelector( (state: stateType) => {state.userIsCorrect});
+    const boxState: any = useSelector( (state: stateType) => {
+        return {
+            emptyBoard: state.emptyBoard,
+            userisCorrect: state.userIsCorrect
+        }
+    });
+    const dispatch = useDispatch();
 
     const checkIfGreatest = (guess: number) => {
         
@@ -15,7 +30,7 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
         // Puts the number of darts in a section in the respective index
         // of the array
         for (let i = 1; i <= 6; i++) {
-            dartSectionList.push(props.store.getState().board.getDartsInSection(i));
+            dartSectionList.push(props.board.getDartsInSection(i));
         }
 
         // ! is the null assertion operator; assures that max() isn't undefined
@@ -39,37 +54,37 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
 
         switch (id) {
             case "sectionOneButton":
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(1));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(1));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             case "sectionTwoButton":
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(2));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(2));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             case "sectionThreeButton": 
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(3));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(3));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             case "sectionFourButton":
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(4));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(4));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             case "sectionFiveButton":
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(5));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(5));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             case "sectionSixButton":
-                rightChoice = checkIfGreatest(props.store.getState().board.getDartsInSection(6));
-                rightChoice == true ? props.store.dispatch(correctChoice()) : props.store.dispatch(incorrectChoice());
+                rightChoice = checkIfGreatest(props.board.getDartsInSection(6));
+                rightChoice == true ? dispatch(correctChoice()) : dispatch(incorrectChoice());
                 pickResultMessage();
                 return rightChoice;
             default:
-                props.store.dispatch(incorrectChoice());
+                dispatch(incorrectChoice());
                 return false;
         };
 
@@ -81,12 +96,12 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
     // Odd error where the padding wouldn't change when testing out the functionality
     const pickResultMessage = () => {
 
-        if (props.store.getState().emptyBoard) {
+        if (boxState.emptyBoard) {
             changeResultMessage("Still empty");
             return;
         }
         
-        const won: boolean = props.store.getState().userIsCorrect;
+        const won: boolean = boxState.userIsCorrect;
 
         if (won) {
             changeResultMessage("You win!");
@@ -100,7 +115,7 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
     const [resultMessage, changeResultMessage] = useState("Empty");
 
     // ResultBox Component
-    const ResultBox: FunctionComponent<{store: any}> = (props) => {
+    const ResultBox: FunctionComponent<any> = (props) => {
     
         return <div className="bg-success"
             style={{
@@ -201,7 +216,7 @@ const DecisionBoxes: FunctionComponent<{store: any}> = (props) => {
         </div>
 
         <div id="resultBox" hidden={true} >
-            <ResultBox store={props.store} />
+            <ResultBox />
         </div>
     </div>
 

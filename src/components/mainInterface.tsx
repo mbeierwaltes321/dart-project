@@ -1,16 +1,24 @@
 import React, { useEffect, useCallback, FunctionComponent } from "react";
-import { clearBoard, throwDarts } from "../Redux_Management/actions";
+import { clearBoard, throwDarts, correctChoice, incorrectChoice } from "../Redux_Management/actions";
+import { stateType } from "../Redux_Management/reducers";
 import DecisionBoxes from "./decisionBoxes";
 import handleDarts from "./dartHandler";
 import { get } from "lodash/fp";
+import { useSelector, useDispatch, useStore } from "react-redux";
+import { board } from "../Redux_Management/reducers";
 
-const MainInterface: FunctionComponent<{store: any}> = (props) => {
+const MainInterface: FunctionComponent<any> = () => {
+
+    // React-Redux selectors and dispatch
+    const emptyBoard = useSelector( (state: stateType) => state.emptyBoard);
+    const dispatch = useDispatch();
+    // const theStore = useStore();
 
     /* useEffect - the function that is input is performed after the components mount.
     In other words, after everything loads, useEffect runs */
 
     // Functions needed after DOM is loaded - designs the board and disables the Reset button intially
-    useEffect(props.store.getState().board.designDartBoard, [])
+    useEffect(board.designDartBoard, [])
     useEffect(() => { disableButton("resetButton") }, []);
 
     // Reveals or hides the guessbox depending on if darts were thrown
@@ -25,7 +33,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
             return;
         }
 
-        switch(box) {
+        switch (box) {
             case "guessBox":
                 (guessBox as HTMLDivElement).hidden = reveal;
                 break;
@@ -66,17 +74,17 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
        changes.
     */
     const handleDartButtonClick = useCallback(async (el) => {
-
         // This obtains the ID of the button element
         const id = get('target.id', el);
         if (!id) {
             return;
         }
+        await handleDarts(board, "throw");
+        dispatch(throwDarts());
 
-        await handleDarts(props.store.getState().board, "throw");
-        props.store.dispatch(throwDarts());
-        if (!props.store.getState().emptyBoard) {
-           hideDecisionBox("guessBox", false);
+        // ERROR - dispatch goes through, but the state variables aren't being updated
+        if (!emptyBoard) {
+            hideDecisionBox("guessBox", false);
             disableButton(id);
             enableButton("resetButton");
         }
@@ -92,9 +100,9 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
         }
 
         // Waits for the darts to finish before updating the state
-        await handleDarts(props.store.getState().board, "remove");
-        props.store.dispatch(clearBoard());
-        if (props.store.getState().emptyBoard) {
+        await handleDarts(board, "remove");
+        dispatch(clearBoard());
+        if (emptyBoard) {
             hideDecisionBox("both", true);
             enableButton("dartButton");
             disableButton(id);
@@ -137,7 +145,7 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
             </div>
             <div id="resultElements" style={{width:"300px", position: "absolute", display: "inline-block"}}>
                 <div id="guessBoard" style={{position: "static"}} hidden={true} >
-                    <DecisionBoxes store={props.store}/>
+                    <DecisionBoxes board={board} />
                 </div>
             </div>
         </div>
@@ -160,9 +168,10 @@ const MainInterface: FunctionComponent<{store: any}> = (props) => {
             </button>
         </div>
 
-
     </div>
 
 };
+
+
 
 export default MainInterface;

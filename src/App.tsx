@@ -5,11 +5,12 @@ import dartBoardReducer from "./Redux_Management/reducers"
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // composeWithDevTools is used for the redux Chrome extension
-const store = createStore(dartBoardReducer, composeWithDevTools());
+//const store = createStore(dartBoardReducer, composeWithDevTools());
 
 const App = () => {
     return <div>
-        <MainInterface store={store}/>
+        {/* store={store} */}
+        <MainInterface/>
     </div>
 }
 
