@@ -1,9 +1,8 @@
-import React, { useEffect, useCallback, FunctionComponent } from "react";
-import { clearBoard, throwDarts, correctChoice, incorrectChoice } from "../Redux_Management/actions";
+import React, { useEffect, FunctionComponent } from "react";
+import { clearBoard, throwDarts } from "../Redux_Management/actions";
 import { stateType } from "../Redux_Management/reducers";
 import DecisionBoxes from "./decisionBoxes";
 import handleDarts from "./dartHandler";
-import { get } from "lodash/fp";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { board } from "../Redux_Management/reducers";
 
@@ -12,17 +11,21 @@ const MainInterface: FunctionComponent<any> = () => {
     // React-Redux selectors and dispatch
     const emptyBoard = useSelector( (state: stateType) => state.emptyBoard);
     const dispatch = useDispatch();
-    // const theStore = useStore();
-
-    /* useEffect - the function that is input is performed after the components mount.
-    In other words, after everything loads, useEffect runs */
 
     // Functions needed after DOM is loaded - designs the board and disables the Reset button intially
     useEffect(board.designDartBoard, [])
-    useEffect(() => { disableButton("resetButton") }, []);
+
+    // Changes state of the guess/result box when emptyBoard changes
+    useEffect(() => {
+        if (!emptyBoard) {
+            hideDecisionBox("guessBox", false);
+        } else {
+            hideDecisionBox("both", true);
+        }
+    }, [emptyBoard]);
 
     // Reveals or hides the guessbox depending on if darts were thrown
-    const hideDecisionBox = useCallback((box: string, reveal: boolean) => {
+    const hideDecisionBox = (box: string, reveal: boolean) => {
         const guessBox = document.getElementById("guessBoard");
         if (!guessBox) {
             return;
@@ -48,67 +51,19 @@ const MainInterface: FunctionComponent<any> = () => {
                 return;
         }
 
-    }, [])
-
-    const disableButton = (buttonId: string) => {
-        const buttonToDisable = document.getElementById(buttonId);
-        if (!buttonToDisable) {
-            return;
-        }
-
-        // Casting the button as an HTML Button Element
-        (buttonToDisable as HTMLButtonElement).disabled = true;
     }
 
-    const enableButton = (buttonId: string) => {
-        const buttonToDisable = document.getElementById(buttonId);
-        if (!buttonToDisable) {
-            return;
-        }
-
-        (buttonToDisable as HTMLButtonElement).disabled = false;
-    }
-
-    /* Memoized - caches the result of the function and returns it when the same input returns again.
-       useCallback returns a memoized callback that only changes if one of the dependencies (in the brackets)
-       changes.
-    */
-    const handleDartButtonClick = useCallback(async (el) => {
-        // This obtains the ID of the button element
-        const id = get('target.id', el);
-        if (!id) {
-            return;
-        }
+    // Throws darts and updates store
+    const handleDartButtonClick = async () => {
         await handleDarts(board, "throw");
         dispatch(throwDarts());
+    }
 
-        // ERROR - dispatch goes through, but the state variables aren't being updated
-        if (!emptyBoard) {
-            hideDecisionBox("guessBox", false);
-            disableButton(id);
-            enableButton("resetButton");
-        }
-
-    }, [])
-
-    const handleResetButton = useCallback(async (el) => {
-
-        // This obtains the ID of the button element
-        const id = get('target.id', el);
-        if (!id) {
-            return;
-        }
-
-        // Waits for the darts to finish before updating the state
+    // Resets board and updates store
+    const handleResetButton = async () => {
         await handleDarts(board, "remove");
         dispatch(clearBoard());
-        if (emptyBoard) {
-            hideDecisionBox("both", true);
-            enableButton("dartButton");
-            disableButton(id);
-        }
-
-    }, [])
+    }
 
     return <div>
         {/* TODO - Eventually Redesign to make this title look better */}
@@ -155,7 +110,7 @@ const MainInterface: FunctionComponent<any> = () => {
         {/* Throw Darts and Reset Buttons */}
         <div style={{ width: "350px", left: "25px", display: "inline-flex", position: "relative" }}>
             {/* This button will call ThrowDarts */}
-            <button onClick={handleDartButtonClick} id="dartButton" type="button" className="btn btn-danger">
+            <button onClick={handleDartButtonClick} disabled={!emptyBoard} id="dartButton" type="button" className="btn btn-danger">
                 Throw Darts
             </button>
 
@@ -163,15 +118,12 @@ const MainInterface: FunctionComponent<any> = () => {
             <span style={{ flex: "auto" }} />
 
             {/* This button will reset the dart board */}
-            <button onClick={handleResetButton} id="resetButton" type="button" className="btn btn-danger">
+            <button onClick={handleResetButton} disabled={emptyBoard} id="resetButton" type="button" className="btn btn-danger">
                 Reset
             </button>
         </div>
 
     </div>
-
 };
-
-
 
 export default MainInterface;
