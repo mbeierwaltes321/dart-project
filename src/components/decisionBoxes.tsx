@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import max from "lodash/max";
 import { correctChoice, incorrectChoice } from "../Redux_Management/actions";
 import { stateType } from "../Redux_Management/reducers";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import DartBoard from '../data_strucs/dartBoard';
+import maxBy  from 'lodash/maxBy';
 
 // Contains two components: the Guess Box and the result box.
 // The result box component is built within the 
@@ -14,21 +14,12 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
 
     const emptyBoard = useSelector((state: stateType) =>  state.emptyBoard);
     const userIsCorrect = useSelector((state: stateType) => state.userIsCorrect);
+    const boardData = useSelector((state: stateType) => state.boardData);
     const dispatch = useDispatch();
 
     const checkIfGreatest = (guess: number) => {
-
-        const dartSectionList: number[] = [];
-
-        // Puts the number of darts in a section in the respective index
-        // of the array
-        for (let i = 1; i <= 6; i++) {
-            dartSectionList.push(props.board.getDartsInSection(i));
-        }
-
-        // ! is the null assertion operator; assures that max() isn't undefined
-        return guess >= max(dartSectionList)!;
-
+        // ! is the null assertion operator; assures that data is not undefined
+        return (guess >= maxBy(boardData, (data) => data.numberOfDarts)!.numberOfDarts!);
     }
 
     const guessSection = (section: number) => {
@@ -39,13 +30,11 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
 
         checkIfGreatest(props.board.getDartsInSection(section))
             ? dispatch(correctChoice())
-            : dispatch(incorrectChoice())
+            : dispatch(incorrectChoice());
     }
 
     // Updates result message depending on user's guess
     useEffect(() => {
-
-        console.log("Changing sign");
 
         if (emptyBoard) {
             setResultMessage("Still empty");
@@ -138,11 +127,24 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                     paddingRight: "5px"
                 }}>
 
-                <button onClick={() => { guessSection(1) }} style={{ width: "90px", height: "50px" }} id="sectionOneButton" type="button" className="btn btn-dark"> Section 1 </button>
+                <button onClick={() => { guessSection(1) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionOneButton"
+                        type="button"
+                        className="btn btn-dark">
+                            Section 1 </button>
                 <span style={{ flex: "auto" }}> </span>
-                <button onClick={() => { guessSection(2) }} style={{ width: "90px", height: "50px" }} id="sectionTwoButton" type="button" className="btn btn-dark"> Section 2 </button>
+                <button onClick={() => { guessSection(2) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionTwoButton"
+                        type="button"
+                        className="btn btn-dark"> Section 2 </button>
                 <span style={{ flex: "auto" }}> </span>
-                <button onClick={() => { guessSection(3) }} style={{ width: "90px", height: "50px" }} id="sectionThreeButton" type="button" className="btn btn-dark"> Section 3 </button>
+                <button onClick={() => { guessSection(3) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionThreeButton"
+                        type="button"
+                        className="btn btn-dark"> Section 3 </button>
             </div>
 
             {/* Layer 2 - Section 4 5 and 6 buttons*/}
@@ -156,11 +158,26 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                     paddingRight: "5px"
                 }}>
 
-                <button onClick={() => { guessSection(4) }} style={{ width: "90px", height: "50px" }} id="sectionFourButton" type="button" className="btn btn-dark"> Section 4 </button>
+                <button onClick={() => { guessSection(4) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionFourButton"
+                        type="button"
+                        className="btn btn-dark">
+                            Section 4 </button>
                 <span style={{ flex: "auto" }}> </span>
-                <button onClick={() => { guessSection(5) }} style={{ width: "90px", height: "50px" }} id="sectionFiveButton" type="button" className="btn btn-dark"> Section 5 </button>
+                <button onClick={() => { guessSection(5) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionFiveButton"
+                        type="button"
+                        className="btn btn-dark">
+                            Section 5 </button>
                 <span style={{ flex: "auto" }}> </span>
-                <button onClick={() => { guessSection(6) }} style={{ width: "90px", height: "50px" }} id="sectionSixButton" type="button" className="btn btn-dark"> Section 6 </button>
+                <button onClick={() => { guessSection(6) }}
+                        style={{ width: "90px", height: "50px" }}
+                        id="sectionSixButton"
+                        type="button"
+                        className="btn btn-dark">
+                            Section 6 </button>
 
             </div>
         </div>

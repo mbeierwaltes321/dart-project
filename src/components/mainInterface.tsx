@@ -3,7 +3,7 @@ import { clearBoard, throwDarts } from "../Redux_Management/actions";
 import { stateType } from "../Redux_Management/reducers";
 import DecisionBoxes from "./decisionBoxes";
 import handleDarts from "./dartHandler";
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { board } from "../Redux_Management/reducers";
 
 const MainInterface: FunctionComponent<any> = () => {
@@ -13,7 +13,7 @@ const MainInterface: FunctionComponent<any> = () => {
     const dispatch = useDispatch();
 
     // Functions needed after DOM is loaded - designs the board and disables the Reset button intially
-    useEffect(board.designDartBoard, [])
+    useEffect(board.designDartBoard, []);
 
     // Changes state of the guess/result box when emptyBoard changes
     useEffect(() => {
@@ -110,7 +110,11 @@ const MainInterface: FunctionComponent<any> = () => {
         {/* Throw Darts and Reset Buttons */}
         <div style={{ width: "350px", left: "25px", display: "inline-flex", position: "relative" }}>
             {/* This button will call ThrowDarts */}
-            <button onClick={handleDartButtonClick} disabled={!emptyBoard} id="dartButton" type="button" className="btn btn-danger">
+            <button onClick={handleDartButtonClick}
+                    disabled={!emptyBoard}
+                    id="dartButton"
+                    type="button"
+                    className="btn btn-danger">
                 Throw Darts
             </button>
 
@@ -118,10 +122,17 @@ const MainInterface: FunctionComponent<any> = () => {
             <span style={{ flex: "auto" }} />
 
             {/* This button will reset the dart board */}
-            <button onClick={handleResetButton} disabled={emptyBoard} id="resetButton" type="button" className="btn btn-danger">
+            <button onClick={handleResetButton}
+                    disabled={emptyBoard}
+                    id="resetButton"
+                    type="button"
+                    className="btn btn-danger">
                 Reset
             </button>
         </div>
+
+        {/* Chart containing the results of the dart throw */}
+        
 
     </div>
 };
