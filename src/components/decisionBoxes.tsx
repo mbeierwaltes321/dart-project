@@ -28,6 +28,7 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
         const result_box = document.getElementById("resultBox");
         (result_box as HTMLDivElement).hidden = false;
 
+        // Updates redux if the user guessed correctly
         checkIfGreatest(props.board.getDartsInSection(section))
             ? dispatch(correctChoice())
             : dispatch(incorrectChoice());
@@ -35,7 +36,6 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
 
     // Updates result message depending on user's guess
     useEffect(() => {
-
         if (emptyBoard) {
             setResultMessage("Still empty");
             return;
@@ -63,8 +63,13 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
             }}>
 
             <div style={{ position: "static", color: "cyan" }}>
-                <div id="topLayer" style={{ width: "300px", height: "50px" }}>
-                    <h3 id="message" style={{ paddingLeft: "95px" }}>
+                <div id="topLayer" style={{
+                    width: "300px",
+                    height: "50px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center" }}>
+                    <h3 id="message">
                         {resultMessage}
                     </h3>
                 </div>
@@ -107,7 +112,9 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                 width: "290px",
                 height: "40px",
                 paddingTop: "10px",
-                paddingLeft: "75px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
             }}>
 
                 <h3 id="voteSign" style={{ color: "yellow" }}>
@@ -122,9 +129,9 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                     height: "70px",
                     width: "290px",
                     paddingTop: "10px",
-                    paddingBottom: "10px",
-                    paddingLeft: "5px",
-                    paddingRight: "5px"
+                    display: "flex",
+                    alignContent: "center",
+                    justifyContent: "space-evenly"
                 }}>
 
                 <button onClick={() => { guessSection(1) }}
@@ -133,13 +140,13 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                         type="button"
                         className="btn btn-dark">
                             Section 1 </button>
-                <span style={{ flex: "auto" }}> </span>
+
                 <button onClick={() => { guessSection(2) }}
                         style={{ width: "90px", height: "50px" }}
                         id="sectionTwoButton"
                         type="button"
                         className="btn btn-dark"> Section 2 </button>
-                <span style={{ flex: "auto" }}> </span>
+
                 <button onClick={() => { guessSection(3) }}
                         style={{ width: "90px", height: "50px" }}
                         id="sectionThreeButton"
@@ -153,9 +160,9 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                     height: "70px",
                     width: "290px",
                     paddingTop: "5px",
-                    paddingBottom: "10px",
-                    paddingLeft: "5px",
-                    paddingRight: "5px"
+                    display: "flex",
+                    alignContent: "center",
+                    justifyContent: "space-evenly"
                 }}>
 
                 <button onClick={() => { guessSection(4) }}
@@ -164,21 +171,20 @@ const DecisionBoxes: FunctionComponent<{ board: DartBoard }> = (props) => {
                         type="button"
                         className="btn btn-dark">
                             Section 4 </button>
-                <span style={{ flex: "auto" }}> </span>
+
                 <button onClick={() => { guessSection(5) }}
                         style={{ width: "90px", height: "50px" }}
                         id="sectionFiveButton"
                         type="button"
                         className="btn btn-dark">
                             Section 5 </button>
-                <span style={{ flex: "auto" }}> </span>
+
                 <button onClick={() => { guessSection(6) }}
                         style={{ width: "90px", height: "50px" }}
                         id="sectionSixButton"
                         type="button"
                         className="btn btn-dark">
                             Section 6 </button>
-
             </div>
         </div>
 

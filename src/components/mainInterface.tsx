@@ -5,6 +5,7 @@ import DecisionBoxes from "./decisionBoxes";
 import handleDarts from "./dartHandler";
 import { useSelector, useDispatch } from "react-redux";
 import { board } from "../Redux_Management/reducers";
+import ResultChart from "./resultChart";
 
 const MainInterface: FunctionComponent<any> = () => {
 
@@ -132,7 +133,7 @@ const MainInterface: FunctionComponent<any> = () => {
         </div>
 
         {/* Chart containing the results of the dart throw */}
-        
+        <ResultChart/>
 
     </div>
 };
